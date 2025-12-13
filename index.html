@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini AI Chat</title>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="container">
+
+    <!-- Header -->
+    <header>
+      <h1>Gemini AI Chat</h1>
+      <p class="subtitle">Chat with Google's advanced AI model</p>
+    </header>
+
+    <!-- Chat Area -->
+    <section class="chat-container" aria-label="Chat messages">
+
+      <!-- Messages -->
+      <div class="chat-messages" id="chatMessages">
+
+        <!-- AI Message -->
+        <div class="message ai-message">
+          <div class="avatar" aria-hidden="true">AI</div>
+          <div class="message-content">
+            Hello! I'm Gemini AI. How can I help you today?
+          </div>
+        </div>
+
+        <!-- Example User Message -->
+        <!--
+        <div class="message user-message">
+          <div class="avatar user-avatar">U</div>
+          <div class="message-content">
+            Tell me about JavaScript.
+          </div>
+        </div>
+        -->
+
+        <!-- Typing Indicator (hidden by default) -->
+        <!--
+        <div class="typing-indicator">
+          <span>Gemini is typing</span>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        -->
+
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-container">
+        <form class="input-form" id="chatForm" autocomplete="off">
+
+          <textarea
+            id="userInput"
+            placeholder="Type your message here..."
+            rows="1"
+            required
+            aria-label="Message input"
+          ></textarea>
+
+          <button type="submit" id="sendButton">
+            Send
+          </button>
+
+        </form>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
