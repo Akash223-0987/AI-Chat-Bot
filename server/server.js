@@ -1,10 +1,16 @@
+require("dotenv").config();
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // Middleware
 app.use(cors());
@@ -23,10 +29,10 @@ app.post('/api/chat', async (req, res) => {
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: 'API key not configured' });
-    }
 
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY not found");
+}
     // Call Gemini API
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
