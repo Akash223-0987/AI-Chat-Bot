@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         sendButton.disabled=!userInput.value.trim();
     });
 
+
+    
     chatForm.addEventListener("submit",async(e)=>{
         e.preventDefault();
         const message=userInput.value.trim();
