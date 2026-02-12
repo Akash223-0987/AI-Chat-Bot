@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0c29"/>
+      <stop offset="50%" stop-color="#302b63"/>
+      <stop offset="100%" stop-color="#24243e"/>
+    </linearGradient>
+    <linearGradient id="glow1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#7b2ff7"/>
+    </linearGradient>
+    <linearGradient id="glow2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff6fd8"/>
+      <stop offset="100%" stop-color="#3813c2"/>
+    </linearGradient>
+    <filter id="neon">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="100" height="100" rx="22" fill="url(#bg)"/>
+
+  <!-- Outer orbit ring -->
+  <ellipse cx="50" cy="50" rx="32" ry="32" fill="none" stroke="url(#glow1)" stroke-width="1.2" opacity="0.3" filter="url(#neon)"/>
+
+  <!-- Inner orbit ring tilted -->
+  <ellipse cx="50" cy="50" rx="22" ry="10" fill="none" stroke="url(#glow2)" stroke-width="1" opacity="0.5" transform="rotate(-30 50 50)" filter="url(#neon)"/>
+  <ellipse cx="50" cy="50" rx="22" ry="10" fill="none" stroke="url(#glow1)" stroke-width="1" opacity="0.5" transform="rotate(30 50 50)" filter="url(#neon)"/>
+
+  <!-- Central AI core -->
+  <circle cx="50" cy="50" r="12" fill="none" stroke="url(#glow1)" stroke-width="2" opacity="0.8" filter="url(#softGlow)"/>
+  <circle cx="50" cy="50" r="7" fill="#0f0c29" stroke="url(#glow2)" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="50" cy="50" r="3.5" fill="#00f0ff" opacity="0.95" filter="url(#softGlow)"/>
+
+  <!-- Orbiting particles -->
+  <circle cx="50" cy="18" r="2.5" fill="#00f0ff" opacity="0.9" filter="url(#neon)"/>
+  <circle cx="76" cy="63" r="2" fill="#ff6fd8" opacity="0.85" filter="url(#neon)"/>
+  <circle cx="24" cy="58" r="1.8" fill="#7b2ff7" opacity="0.8" filter="url(#neon)"/>
+  <circle cx="67" cy="30" r="1.5" fill="#00f0ff" opacity="0.7" filter="url(#neon)"/>
+
+  <!-- Data stream lines -->
+  <line x1="50" y1="18" x2="50" y2="38" stroke="#00f0ff" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 2"/>
+  <line x1="76" y1="63" x2="62" y2="55" stroke="#ff6fd8" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 2"/>
+  <line x1="24" y1="58" x2="38" y2="52" stroke="#7b2ff7" stroke-width="0.8" opacity="0.4" stroke-dasharray="2 2"/>
+</svg>
