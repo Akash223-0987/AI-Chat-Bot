@@ -1,85 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Chat Bot</title>
-  <link rel="icon" href="data:,">
+  <title>AI Chat Bot — Powered by Gemini</title>
+  <meta name="description" content="Chat with an advanced AI model powered by Google Gemini. Fast, intelligent, and free." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Main Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <main class="container">
+  <main class="app" id="app">
 
     <!-- Header -->
-    <header>
-      <h1>AI Chat</h1>
-      <p class="subtitle">Chat with a Advanced AI model</p>
+    <header class="header" id="header">
+      <div class="header-left">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 8V4"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M9 13v2"/><path d="M15 13v2"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="header-title">AI Chat</h1>
+          <p class="header-subtitle">Powered by Gemini</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-icon" id="clearChat" title="Clear chat" aria-label="Clear chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+        </button>
+        <button class="btn-icon" id="themeToggle" title="Toggle theme" aria-label="Toggle dark/light mode">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <!-- Chat Area -->
-    <section class="chat-container" aria-label="Chat messages">
+    <section class="chat-area" aria-label="Chat messages">
 
       <!-- Messages -->
-      <div class="chat-messages" id="chatMessages">
+      <div class="messages" id="chatMessages">
 
-        <!-- AI Message -->
-        <div class="message ai-message">
-          <div class="avatar" aria-hidden="true">AI</div>
-          <div class="message-content">
-            Hello! I'm Pro AI. How can I help you today?
+        <!-- Welcome Message -->
+        <div class="welcome-card" id="welcomeCard">
+          <div class="welcome-emoji">✨</div>
+          <h2 class="welcome-title">Hello! I'm AI Chat.</h2>
+          <p class="welcome-text">Ask me anything — I'm powered by Google's Gemini model.</p>
+          <div class="suggestions" id="suggestions">
+            <button class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">🔬 Quantum Computing</button>
+            <button class="suggestion-chip" data-prompt="Write a short poem about the ocean">🌊 Write a Poem</button>
+            <button class="suggestion-chip" data-prompt="What are the best tips for learning to code?">💻 Coding Tips</button>
           </div>
         </div>
-
-        <!-- Example User Message -->
-        <!--
-        <div class="message user-message">
-          <div class="avatar user-avatar">U</div>
-          <div class="message-content">
-            Tell me about JavaScript.
-          </div>
-        </div>
-        -->
-
-        <!-- Typing Indicator (hidden by default) -->
-        <!--
-        <div class="typing-indicator">
-          <span>Gemini is typing</span>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        -->
 
       </div>
 
       <!-- Input Area -->
-      <div class="input-container">
+      <div class="input-area" id="inputArea">
         <form class="input-form" id="chatForm" autocomplete="off">
-
-          <textarea
-            id="userInput"
-            placeholder="Type your message here..."
-            rows="1"
-            required
-            aria-label="Message input"
-          ></textarea>
-
-          <button type="submit" id="sendButton">
-            Send
-          </button>
-
+          <div class="input-wrapper">
+            <textarea
+              id="userInput"
+              placeholder="Message AI Chat..."
+              rows="1"
+              required
+              aria-label="Message input"
+            ></textarea>
+            <button type="submit" id="sendButton" disabled title="Send message" aria-label="Send message">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="input-hint">Press <kbd>Enter</kbd> to send, <kbd>Shift+Enter</kbd> for new line</p>
         </form>
       </div>
 
     </section>
+
   </main>
 
   <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
-

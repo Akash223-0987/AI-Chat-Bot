@@ -3,47 +3,103 @@ const API_URL = '/api/chat';
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- DOM Elements ---
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
     const chatMessages = document.getElementById('chatMessages');
     const sendButton = document.getElementById('sendButton');
+    const themeToggle = document.getElementById('themeToggle');
+    const clearChat = document.getElementById('clearChat');
+    const welcomeCard = document.getElementById('welcomeCard');
+    const suggestions = document.getElementById('suggestions');
 
+    // --- Theme Toggle ---
+    const savedTheme = localStorage.getItem('ai-chat-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ai-chat-theme', next);
+    });
+
+    // --- Clear Chat ---
+    clearChat.addEventListener('click', () => {
+        chatMessages.innerHTML = '';
+        // Re-add welcome card
+        chatMessages.innerHTML = `
+            <div class="welcome-card" id="welcomeCard">
+                <div class="welcome-emoji">✨</div>
+                <h2 class="welcome-title">Hello! I'm AI Chat.</h2>
+                <p class="welcome-text">Ask me anything — I'm powered by Google's Gemini model.</p>
+                <div class="suggestions" id="suggestions">
+                    <button class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">🔬 Quantum Computing</button>
+                    <button class="suggestion-chip" data-prompt="Write a short poem about the ocean">🌊 Write a Poem</button>
+                    <button class="suggestion-chip" data-prompt="What are the best tips for learning to code?">💻 Coding Tips</button>
+                </div>
+            </div>
+        `;
+        bindSuggestionChips();
+    });
+
+    // --- Suggestion Chips ---
+    function bindSuggestionChips() {
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const prompt = chip.getAttribute('data-prompt');
+                userInput.value = prompt;
+                sendButton.disabled = false;
+                userInput.focus();
+                chatForm.requestSubmit();
+            });
+        });
+    }
+    bindSuggestionChips();
+
+    // --- Auto-resize Textarea ---
     userInput.addEventListener('input', () => {
         userInput.style.height = 'auto';
-        userInput.style.height = userInput.scrollHeight + 'px';
+        userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
         sendButton.disabled = !userInput.value.trim();
     });
 
+    // --- Submit Handler ---
     chatForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const message = userInput.value.trim();
         if (!message) return;
-        
+
+        // Hide welcome card on first message
+        const welcome = document.getElementById('welcomeCard');
+        if (welcome) welcome.remove();
+
         // Add user message to chat
-        addUserMessage(message, true);
-        
+        addMessage(message, true);
+
         userInput.value = "";
         userInput.style.height = "auto";
         sendButton.disabled = true;
-        
+
         // Show typing indicator
         const typingIndicator = showTypingIndicator();
         try {
             // Generate response from backend
             const response = await generateResponse(message);
             typingIndicator.remove();
-            // Add AI response (not user message)
-            addUserMessage(response, false);
-            
+            // Add AI response
+            addMessage(response, false);
+
         } catch (error) {
             typingIndicator.remove();
             addErrorMessage(error.message);
         } finally {
             sendButton.disabled = false;
+            userInput.focus();
         }
     });
 
-    // Generate response function - calls backend API
+    // --- Generate Response (Backend API Call) ---
     async function generateResponse(prompt) {
         const response = await fetch(API_URL, {
             method: 'POST',
@@ -57,75 +113,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || 'Network response was not ok');     
+            throw new Error(errorData.error || 'Network response was not ok');
         }
-        
+
         const data = await response.json();
         return data.response;
     }
 
-// Escape HTML to prevent XSS attacks
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+    // --- Escape HTML (XSS Prevention) ---
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
-// add user message to chat
-function addUserMessage(text, isUser) {
-    const message = document.createElement('div');
-    message.className = `message ${isUser ? "user-message" : ""}`;
-    message.innerHTML = `
-    <div class="avatar ${isUser ? "user-avatar" : ""}">
-    ${isUser ? "U" : "AI"}
-    </div>
-    <div class="message-content">${escapeHtml(text)}</div>
-    `;
-    chatMessages.appendChild(message);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+    // --- Add Message ---
+    function addMessage(text, isUser) {
+        const message = document.createElement('div');
+        message.className = `message ${isUser ? "user-message" : ""}`;
+        message.innerHTML = `
+            <div class="avatar ${isUser ? "user-avatar" : ""}">${isUser ? "U" : "AI"}</div>
+            <div class="message-content">${escapeHtml(text)}</div>
+        `;
+        chatMessages.appendChild(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
+    // --- Typing Indicator ---
     function showTypingIndicator() {
         const indicator = document.createElement('div');
         indicator.className = 'message';
         indicator.innerHTML = `
-        <div class="avatar">AI</div>
-        <div class="typing-indicator">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        </div>
+            <div class="avatar">AI</div>
+            <div class="typing-indicator">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
         `;
         chatMessages.appendChild(indicator);
         chatMessages.scrollTop = chatMessages.scrollHeight;
         return indicator;
     }
 
-    // ERROR HANDLING FUNCTION
+    // --- Error Message ---
     function addErrorMessage(text) {
         const message = document.createElement('div');
         message.className = "message";
         message.innerHTML = `
-        <div class="avatar">AI</div>
-        <div class="message-content" style="color:red">
-        Error: ${escapeHtml(text)}
-        </div>
+            <div class="avatar">AI</div>
+            <div class="message-content error-bubble">⚠️ ${escapeHtml(text)}</div>
         `;
         chatMessages.appendChild(message);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    const textarea = document.getElementById("userInput");
-    const form = document.getElementById("chatForm");
-
-    textarea.addEventListener("keydown", (e) => {
-        // Enter without Shift → send message
+    // --- Enter to Send ---
+    userInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // stop new line
-            form.requestSubmit(); // trigger form submit
+            e.preventDefault();
+            if (userInput.value.trim()) {
+                chatForm.requestSubmit();
+            }
         }
     });
 
 });
-
-

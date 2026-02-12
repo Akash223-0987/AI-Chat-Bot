@@ -8,9 +8,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
 
 // Middleware
 app.use(cors());
@@ -30,9 +28,10 @@ app.post('/api/chat', async (req, res) => {
 
     const apiKey = process.env.GEMINI_API_KEY;
 
-if (!apiKey) {
-  throw new Error("GEMINI_API_KEY not found");
-}
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY not found in .env file");
+    }
+
     // Call Gemini API
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
@@ -61,6 +60,7 @@ if (!apiKey) {
 
     const data = await response.json();
     
+    // Check for valid response structure
     if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
       console.error('Invalid API response structure:', JSON.stringify(data, null, 2));
       return res.status(500).json({ error: 'Invalid response from AI' });
@@ -76,7 +76,18 @@ if (!apiKey) {
 
   } catch (error) {
     console.error('Server Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    
+    // Provide helpful error messages for common issues
+    let userMessage = 'Internal server error';
+    if (error.code === 'ENOTFOUND' || error.code === 'EAI_AGAIN') {
+      userMessage = 'Could not connect to AI service. Please check your internet connection.';
+    } else if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
+      userMessage = 'Request timed out. Please try again.';
+    } else if (error.message?.includes('API_KEY')) {
+      userMessage = error.message;
+    }
+    
+    res.status(500).json({ error: userMessage });
   }
 });
 
@@ -106,4 +117,3 @@ app.listen(PORT, () => {
   process.exit(1);
 });
 
-// isse thik kar laude
