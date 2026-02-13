@@ -82,3 +82,6 @@ ai-chat-app/
 - **API errors**: Verify your API key is correct in the `server/.env` file
 - **CORS errors**: The backend includes CORS middleware to allow frontend requests
 
+
+##Next task is to change the api.I will take the API key from  the Open Cluster.
+
