@@ -1,95 +1,84 @@
-# ✨ Kairos
+# AI Chat Bot
 
-A modern, minimalist AI chat interface powered by **StepFun's Step-3.5 Flash** model via OpenRouter. This application provides a sleek, responsive chat experience with support for code snippets, markdown formatting, and theme switching.
+A secure AI chatbot application using Google's Gemini API with a Node.js backend to protect your API key.
 
-![Kairos Interface](https://via.placeholder.com/800x450?text=Kairos+Interface)
+## Features
 
-## ✨ Features
+- 🔒 Secure API key handling 
+- 💬 Real-time chat interface
+- 🎨 Modern, responsive UI
+- ⚡ Fast and efficient
 
-- **Advanced AI Model**: Powered by `stepfun/step-3.5-flash:free`, capable of coherent conversation, coding assistance, and creative writing.
-- **Modern UI/UX**: Clean, distraction-free interface with glassmorphism effects and smooth animations.
-- **Markdown Support**: Renders bold text, lists, and code blocks beautifully.
-- **Theme System**: Toggle between Light and Dark modes with automatic preference detection.
-- **Suggestion Chips**: Quick-start conversation prompts for instant engagement.
-- **Responsive Design**: Fully optimized for desktop, tablet, and mobile devices.
-- **Robust Error Handling**: Graceful handling of network issues and API timeouts.
+## Setup Instructions
 
-## 🛠️ Tech Stack
+### 1. Install Dependencies
 
-- **Frontend**: 
-  - HTML5, CSS3 (Vanilla), JavaScript (ES6+)
-  - No heavy frameworks, just pure performance.
-- **Backend**: 
-  - Node.js & Express
-  - RESTful API architecture
-- **AI Integration**: 
-  - [OpenRouter API](https://openrouter.ai/)
-  - Model: **StepFun Step-3.5 Flash**
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm (Node Package Manager)
-- An API Key from [OpenRouter](https://openrouter.ai/)
-
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/ai-chat-app.git
-    cd ai-chat-app
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    cd server
-    npm install
-    ```
-
-3.  **Configure Environment Variables:**
-    - Create a `.env` file in the `server` directory.
-    - Add your OpenRouter API key:
-      ```env
-      PORT=3000
-      OPENROUTER_API_KEY=your_actual_api_key_here
-      ```
-
-4.  **Run the Application:**
-    - Start the server:
-      ```bash
-      # In the server directory
-      npm run dev
-      ```
-    - The server will start at `http://localhost:3000`.
-    - Open your browser and navigate to `http://localhost:3000`.
-
-## 📦 Deployment
-
-This project is optimized for deployment on **Render** (Backend) and **Vercel** (Frontend).
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for a complete step-by-step guide.
-
-## 📂 Project Structure
+Navigate to the server folder and install dependencies:
 
 ```bash
-ai-chat-app/
-├── client/              # Frontend files
-│   ├── index.html       # Main HTML structure
-│   ├── style.css        # Styles and themes
-│   └── script.js        # UI logic and API calls
-├── server/              # Backend files
-│   ├── server.js        # Express server & API proxy
-│   ├── package.json     # Backend dependencies
-│   └── .env             # Environment variables (not committed)
-└── README.md            # Project documentation
+cd server
+npm install
 ```
 
-## 🤝 Contributing
+### 2. Configure API Key
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a `.env` file in the `server` folder:
+   ```
+   GEMINI_API_KEY=your_api_key_here
+   PORT=3001
+   ```
 
-## 📄 License
+### 3. Start the Backend Server
 
-This project is open-source and available under the [MIT License](LICENSE).
+From the `server` folder:
+
+```bash
+npm start
+```
+
+Or for development with auto-reload:
+```bash
+npm run dev
+```
+
+The server will run on `http://localhost:3001` and automatically serve the client files.
+
+### 4. Open the Application
+
+Once the server is running, open your browser and go to:
+```
+http://localhost:3001
+```
+
+The server automatically serves the client files, so you don't need a separate frontend server!
+
+## Project Structure
+
+```
+ai-chat-app/
+├── server/
+│   ├── server.js          # Backend Express server
+│   ├── package.json       # Server dependencies
+│   ├── .env               # Environment variables (create this)
+│   └── .env.example       # Example environment file
+├── client/
+│   ├── index.html         # Frontend HTML
+│   ├── script.js          # Frontend JavaScript
+│   └── style.css          # Frontend styles
+├── .gitignore             # Git ignore file
+└── README.md              # This file
+```
+
+## Security Notes
+
+- ⚠️ Never commit your `.env` file to version control
+- ✅ The API key is stored securely on the backend
+- ✅ Frontend only communicates with your backend server
+
+## Troubleshooting
+
+- **Chat not responding**: Make sure the backend server is running on port 3000
+- **API errors**: Verify your API key is correct in the `server/.env` file
+- **CORS errors**: The backend includes CORS middleware to allow frontend requests
+
