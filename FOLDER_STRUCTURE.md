@@ -48,4 +48,3 @@ server/
    Go to `http://localhost:3000`
 
 That's it! The server will serve both the API and the frontend files.
-

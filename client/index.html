@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Chat Bot — Powered by Gemini</title>
-  <meta name="description" content="Chat with an advanced AI model powered by Google Gemini. Fast, intelligent, and free." />
+  <title>Kairos — AI Assistant</title>
+  <meta name="description" content="A modern, minimalist AI assistant. Clean, intelligent, and thoughtfully designed." />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3" />
 
   <!-- Google Fonts -->
@@ -22,15 +22,8 @@
     <!-- Header -->
     <header class="header" id="header">
       <div class="header-left">
-        <div class="logo-icon" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 8V4H8"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 8V4"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M9 13v2"/><path d="M15 13v2"/>
-          </svg>
-        </div>
-        <div>
-          <h1 class="header-title">AI Chat</h1>
-          <p class="header-subtitle">Powered by Gemini</p>
-        </div>
+        <img src="./favicon.svg" alt="Kairos" class="logo-icon" />
+        <h1 class="header-title">Kairos</h1>
       </div>
       <div class="header-actions">
         <button class="btn-icon" id="clearChat" title="Clear chat" aria-label="Clear chat">
@@ -60,8 +53,8 @@
         <!-- Welcome Message -->
         <div class="welcome-card" id="welcomeCard">
           <div class="welcome-emoji">✨</div>
-          <h2 class="welcome-title">Hello! I'm AI Chat.</h2>
-          <p class="welcome-text">Ask me anything — I'm powered by Google's Gemini model.</p>
+          <h2 class="welcome-title">Hello, I'm Kairos.</h2>
+          <p class="welcome-text">A modern AI assistant. Ask me anything.</p>
           <div class="suggestions" id="suggestions">
             <button class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">🔬 Quantum Computing</button>
             <button class="suggestion-chip" data-prompt="Write a short poem about the ocean">🌊 Write a Poem</button>
@@ -77,7 +70,7 @@
           <div class="input-wrapper">
             <textarea
               id="userInput"
-              placeholder="Message AI Chat..."
+              placeholder="Message Kairos..."
               rows="1"
               required
               aria-label="Message input"

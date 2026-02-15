@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.innerHTML = `
             <div class="welcome-card" id="welcomeCard">
                 <div class="welcome-emoji">✨</div>
-                <h2 class="welcome-title">Hello! I'm AI Chat.</h2>
-                <p class="welcome-text">Ask me anything — I'm powered by Google's Gemini model.</p>
+                <h2 class="welcome-title">Hello, I'm Kairos.</h2>
+                <p class="welcome-text">A modern AI assistant. Ask me anything.</p>
                 <div class="suggestions" id="suggestions">
                     <button class="suggestion-chip" data-prompt="Explain quantum computing in simple terms">🔬 Quantum Computing</button>
                     <button class="suggestion-chip" data-prompt="Write a short poem about the ocean">🌊 Write a Poem</button>
@@ -128,12 +128,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Add Message ---
+    // --- Clean Text Content ---
+    function cleanText(text) {
+        // Remove markdown symbols visually
+        let clean = text.replace(/[*#_`~]/g, '');
+        
+        // Remove bullet points at start of lines
+        clean = clean.replace(/^\s*[-•]\s*/gm, '');
+        
+        // Normalize whitespace (no triple newlines)
+        clean = clean.replace(/\n{3,}/g, '\n\n');
+        
+        return clean.trim();
+    }
+
+    // --- Add Message ---
     function addMessage(text, isUser) {
         const message = document.createElement('div');
         message.className = `message ${isUser ? "user-message" : ""}`;
+        
+        // Clean text for display
+        const displayText = cleanText(text);
+
         message.innerHTML = `
-            <div class="avatar ${isUser ? "user-avatar" : ""}">${isUser ? "U" : "AI"}</div>
-            <div class="message-content">${escapeHtml(text)}</div>
+            <div class="avatar ${isUser ? "user-avatar" : ""}">${isUser ? "Me" : "K"}</div>
+            <div class="message-content">${escapeHtml(displayText)}</div>
         `;
         chatMessages.appendChild(message);
         chatMessages.scrollTop = chatMessages.scrollHeight;

@@ -81,4 +81,3 @@ ai-chat-app/
 - **Chat not responding**: Make sure the backend server is running on port 3000
 - **API errors**: Verify your API key is correct in the `server/.env` file
 - **CORS errors**: The backend includes CORS middleware to allow frontend requests
-
