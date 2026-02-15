@@ -65,6 +65,7 @@
 html {
   font-size: 15px; /* Slightly smaller base for desktop apps */
   height: 100%;
+  height: 100dvh; /* Dynamic viewport height for modern mobile browsers */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -74,6 +75,7 @@ body {
   background: var(--bg-app);
   color: var(--text-primary);
   height: 100%;
+  height: 100dvh;
   overflow: hidden; /* Prevent body scroll, handle in app */
   display: flex;
   flex-direction: column;
@@ -119,10 +121,10 @@ body {
 }
 
 .header-title {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1.1rem; /* Slightly larger for better presence */
+  font-weight: 600;  /* A bit bolder */
   color: var(--text-primary);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em; /* Tighter tracking looks more modern/premium */
 }
 
 .header-actions {
@@ -223,10 +225,11 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.welcome-emoji {
-  font-size: 2rem;
+.welcome-logo {
+  width: 48px;
+  height: 48px;
   margin-bottom: 1rem;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .welcome-title {
@@ -468,13 +471,151 @@ body {
   font-weight: 400;
 }
 
+/* Default state for mobile menu (hidden on desktop) */
+.mobile-menu-dropdown {
+  display: none;
+}
+
 /* Hide scrollbar for standard look but keep functionality */
 /* For mobile primarily */
-@media (max-width: 640px) {
-  .header { padding: 0 1rem; }
-  .messages { padding: 1rem; }
-  .input-area { padding: 1rem; }
-  .input-wrapper { border-radius: 20px; }
-  .welcome-card { padding: 1.5rem; }
-  .welcome-title { font-size: 1.25rem; }
+/* ========================================
+   Responsive Design (Mobile)
+   ======================================== */
+
+@media (max-width: 768px) {
+  /* Hide desktop actions on mobile */
+  .desktop-actions {
+    display: none !important;
+  }
+
+  /* Show mobile menu trigger */
+  .mobile-menu-trigger {
+    display: flex !important;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+  }
+
+  /* Header Centering */
+  .header {
+    padding: 0 1rem;
+    height: 52px;
+    position: relative;
+    justify-content: center;
+  }
+
+  .header-title {
+    font-size: 1.05rem; /* Match the new style on mobile too, just slightly smaller */
+  }
+
+  /* Mobile Dropdown Menu */
+  .mobile-menu-dropdown {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 50px; /* Below header */
+    right: 1rem;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    min-width: 180px;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fadeIn 0.1s ease-out;
+  }
+
+  .mobile-menu-dropdown.show {
+    display: flex;
+  }
+
+  .mobile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-family: var(--font-family);
+  }
+
+  .mobile-menu-item:hover {
+    background: var(--bg-message-user);
+  }
+
+  .mobile-menu-item svg {
+    width: 18px;
+    height: 18px;
+    color: var(--text-secondary);
+  }
+
+  .chat-area {
+    width: 100%;
+  }
+
+  .messages {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .message-content {
+    max-width: 90%;
+    font-size: 0.95rem;
+  }
+
+  .welcome-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .welcome-title {
+    font-size: 1.25rem;
+  }
+
+  .welcome-text {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .suggestion-chip {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .input-area {
+    padding: 0.75rem 1rem;
+  }
+
+  .input-wrapper {
+    padding: 0.6rem 0.8rem;
+    border-radius: 24px;
+  }
+
+  .input-wrapper textarea {
+    font-size: 16px;
+    max-height: 120px;
+  }
+
+  .input-hint {
+    display: none;
+  }
+
+  .avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .header-title {
+    display: none;
+  }
 }

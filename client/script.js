@@ -27,12 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Clear Chat ---
-    clearChat.addEventListener('click', () => {
-        chatMessages.innerHTML = '';
-        // Re-add welcome card
+    function clearChatHandler() {
         chatMessages.innerHTML = `
             <div class="welcome-card" id="welcomeCard">
-                <div class="welcome-emoji">✨</div>
+                <img src="./favicon.svg" alt="Kairos Logo" class="welcome-logo" />
                 <h2 class="welcome-title">Hello, I'm Kairos.</h2>
                 <p class="welcome-text">A modern AI assistant. Ask me anything.</p>
                 <div class="suggestions" id="suggestions">
@@ -43,6 +41,41 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         bindSuggestionChips();
+        // Close mobile menu if open
+        document.getElementById('mobileMenuDropdown').classList.remove('show');
+    }
+
+    clearChat.addEventListener('click', clearChatHandler);
+
+    // --- Mobile Menu Logic ---
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuDropdown = document.getElementById('mobileMenuDropdown');
+    const mobileClearChat = document.getElementById('mobileClearChat');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+
+    // Toggle Menu
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileMenuDropdown.classList.toggle('show');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!mobileMenuBtn.contains(e.target) && !mobileMenuDropdown.contains(e.target)) {
+            mobileMenuDropdown.classList.remove('show');
+        }
+    });
+
+    // Mobile Clear Chat
+    mobileClearChat.addEventListener('click', clearChatHandler);
+
+    // Mobile Theme Toggle
+    mobileThemeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ai-chat-theme', next);
+        mobileMenuDropdown.classList.remove('show');
     });
 
     // --- Suggestion Chips ---

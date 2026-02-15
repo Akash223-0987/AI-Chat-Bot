@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kairos — AI Assistant</title>
+  <title>Kairos</title>
   <meta name="description" content="A modern, minimalist AI assistant. Clean, intelligent, and thoughtfully designed." />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3" />
 
@@ -25,7 +25,7 @@
         <img src="./favicon.svg" alt="Kairos" class="logo-icon" />
         <h1 class="header-title">Kairos</h1>
       </div>
-      <div class="header-actions">
+      <div class="header-actions desktop-actions">
         <button class="btn-icon" id="clearChat" title="Clear chat" aria-label="Clear chat">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
@@ -42,6 +42,32 @@
           </svg>
         </button>
       </div>
+
+      <!-- Mobile Menu Trigger -->
+      <button class="btn-icon mobile-menu-trigger" id="mobileMenuBtn" aria-label="Menu" style="display: none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+
+      <!-- Mobile Dropdown Menu -->
+      <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+        <button class="mobile-menu-item" id="mobileClearChat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+          Clear Chat
+        </button>
+        <button class="mobile-menu-item" id="mobileThemeToggle">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span>Switch Theme</span>
+        </button>
+      </div>
     </header>
 
     <!-- Chat Area -->
@@ -52,7 +78,7 @@
 
         <!-- Welcome Message -->
         <div class="welcome-card" id="welcomeCard">
-          <div class="welcome-emoji">✨</div>
+          <img src="./favicon.svg" alt="Kairos Logo" class="welcome-logo" />
           <h2 class="welcome-title">Hello, I'm Kairos.</h2>
           <p class="welcome-text">A modern AI assistant. Ask me anything.</p>
           <div class="suggestions" id="suggestions">
