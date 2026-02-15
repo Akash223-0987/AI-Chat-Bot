@@ -1,5 +1,7 @@
-// Backend API endpoint
-const API_URL = '/api/chat';
+const IS_LOCALHOST = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_URL = IS_LOCALHOST 
+    ? '/api/chat' 
+    : 'https://YOUR-RENDER-APP-NAME.onrender.com/api/chat';
 
 document.addEventListener('DOMContentLoaded', () => {
 
