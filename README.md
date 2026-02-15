@@ -26,7 +26,7 @@ npm install
 2. Create a `.env` file in the `server` folder:
    ```
    GEMINI_API_KEY=your_api_key_here
-   PORT=3000
+   PORT=3001
    ```
 
 ### 3. Start the Backend Server
@@ -42,13 +42,13 @@ Or for development with auto-reload:
 npm run dev
 ```
 
-The server will run on `http://localhost:3000` and automatically serve the client files.
+The server will run on `http://localhost:3001` and automatically serve the client files.
 
 ### 4. Open the Application
 
 Once the server is running, open your browser and go to:
 ```
-http://localhost:3000
+http://localhost:3001
 ```
 
 The server automatically serves the client files, so you don't need a separate frontend server!
@@ -81,3 +81,4 @@ ai-chat-app/
 - **Chat not responding**: Make sure the backend server is running on port 3000
 - **API errors**: Verify your API key is correct in the `server/.env` file
 - **CORS errors**: The backend includes CORS middleware to allow frontend requests
+
