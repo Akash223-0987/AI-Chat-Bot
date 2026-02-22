@@ -1,6 +1,7 @@
 const IS_LOCALHOST = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_URL = IS_LOCALHOST 
-    ? '/api/chat' 
+const LOCAL_PORT = 3001; // Must match PORT in server/.env
+const API_URL = IS_LOCALHOST
+    ? `http://localhost:${LOCAL_PORT}/api/chat`
     : 'https://kairos-mn58.onrender.com/api/chat';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -162,33 +163,158 @@ document.addEventListener('DOMContentLoaded', () => {
         return div.innerHTML;
     }
 
-    // --- Add Message ---
-    // --- Clean Text Content ---
-    function cleanText(text) {
-        // Remove markdown symbols visually
-        let clean = text.replace(/[*#_`~]/g, '');
-        
-        // Remove bullet points at start of lines
-        clean = clean.replace(/^\s*[-•]\s*/gm, '');
-        
-        // Normalize whitespace (no triple newlines)
-        clean = clean.replace(/\n{3,}/g, '\n\n');
-        
-        return clean.trim();
+    // --- Apply Inline Markdown (bold, italic, code, strikethrough) ---
+    function applyInline(text) {
+        // Bold + Italic: ***text***
+        text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        // Bold: **text** or __text__
+        text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
+        // Italic: *text* or _text_
+        text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        text = text.replace(/_([^_]+?)_/g, '<em>$1</em>');
+        // Inline code: `code`
+        text = text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+        // Strikethrough: ~~text~~
+        text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
+        return text;
+    }
+
+    // --- Markdown to HTML Parser ---
+    function parseMarkdown(rawText) {
+        // Step 1: Escape HTML in the full text first
+        let escaped = escapeHtml(rawText);
+
+        // Step 2: Extract and protect fenced code blocks before line processing
+        const codeBlocks = [];
+        escaped = escaped.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+            const langLabel = lang ? `<span class="code-lang">${lang}</span>` : '';
+            const placeholder = `\x00CODEBLOCK${codeBlocks.length}\x00`;
+            codeBlocks.push(`<div class="code-block">${langLabel}<pre><code>${code.trimEnd()}</code></pre></div>`);
+            return placeholder;
+        });
+
+        // Step 3: Process line-by-line
+        const lines = escaped.split('\n');
+        const output = [];
+        let inList = false;
+        let listType = null;
+
+        const flushList = () => {
+            if (inList) {
+                output.push(listType === 'ol' ? '</ol>' : '</ul>');
+                inList = false;
+                listType = null;
+            }
+        };
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+
+            // Code block placeholder
+            if (line.includes('\x00CODEBLOCK')) {
+                flushList();
+                output.push(line); // will be restored below
+                continue;
+            }
+
+            // Headings (h1–h3)
+            if (/^### (.+)/.test(line)) {
+                flushList();
+                output.push(`<h3>${applyInline(line.replace(/^### /, ''))}</h3>`);
+                continue;
+            }
+            if (/^## (.+)/.test(line)) {
+                flushList();
+                output.push(`<h2>${applyInline(line.replace(/^## /, ''))}</h2>`);
+                continue;
+            }
+            if (/^# (.+)/.test(line)) {
+                flushList();
+                output.push(`<h1>${applyInline(line.replace(/^# /, ''))}</h1>`);
+                continue;
+            }
+
+            // Horizontal rule
+            if (/^(---|===|\*\*\*)$/.test(line.trim())) {
+                flushList();
+                output.push('<hr>');
+                continue;
+            }
+
+            // Ordered list item: "1. text"
+            const olMatch = line.match(/^(\d+)\. (.+)/);
+            if (olMatch) {
+                if (!inList || listType !== 'ol') {
+                    flushList();
+                    output.push('<ol>');
+                    inList = true;
+                    listType = 'ol';
+                }
+                output.push(`<li>${applyInline(olMatch[2])}</li>`);
+                continue;
+            }
+
+            // Unordered list item: "- text" or "* text" or "+ text"
+            const ulMatch = line.match(/^[-*+] (.+)/);
+            if (ulMatch) {
+                if (!inList || listType !== 'ul') {
+                    flushList();
+                    output.push('<ul>');
+                    inList = true;
+                    listType = 'ul';
+                }
+                output.push(`<li>${applyInline(ulMatch[1])}</li>`);
+                continue;
+            }
+
+            // Blank line
+            if (line.trim() === '') {
+                flushList();
+                output.push('<div class="md-spacer"></div>');
+                continue;
+            }
+
+            // Normal paragraph
+            flushList();
+            output.push(`<p>${applyInline(line)}</p>`);
+        }
+
+        flushList();
+
+        // Step 4: Restore code blocks
+        let result = output.join('');
+        codeBlocks.forEach((block, idx) => {
+            result = result.replace(`\x00CODEBLOCK${idx}\x00`, block);
+        });
+
+        return result;
     }
 
     // --- Add Message ---
     function addMessage(text, isUser) {
         const message = document.createElement('div');
-        message.className = `message ${isUser ? "user-message" : ""}`;
-        
-        // Clean text for display
-        const displayText = cleanText(text);
+        message.className = `message ${isUser ? 'user-message' : ''}`;
 
-        message.innerHTML = `
-            <div class="avatar ${isUser ? "user-avatar" : ""}">${isUser ? "Me" : "K"}</div>
-            <div class="message-content">${escapeHtml(displayText)}</div>
-        `;
+        const contentHtml = isUser
+            ? escapeHtml(text)         // User messages: safe plain text
+            : parseMarkdown(text);     // AI messages: full markdown rendering
+
+        const avatarEl = document.createElement('div');
+        avatarEl.className = `avatar ${isUser ? 'user-avatar' : ''}`;
+        avatarEl.textContent = isUser ? 'Me' : 'K';
+
+        const contentEl = document.createElement('div');
+        contentEl.className = isUser ? 'message-content' : 'message-content markdown-body';
+
+        if (isUser) {
+            contentEl.textContent = text;
+        } else {
+            contentEl.innerHTML = contentHtml;
+        }
+
+        message.appendChild(avatarEl);
+        message.appendChild(contentEl);
         chatMessages.appendChild(message);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -198,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const indicator = document.createElement('div');
         indicator.className = 'message';
         indicator.innerHTML = `
-            <div class="avatar">AI</div>
+            <div class="avatar">K</div>
             <div class="typing-indicator">
                 <span class="dot"></span>
                 <span class="dot"></span>
@@ -215,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const message = document.createElement('div');
         message.className = "message";
         message.innerHTML = `
-            <div class="avatar">AI</div>
+            <div class="avatar">K</div>
             <div class="message-content error-bubble">⚠️ ${escapeHtml(text)}</div>
         `;
         chatMessages.appendChild(message);
